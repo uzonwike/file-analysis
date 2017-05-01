@@ -9,6 +9,7 @@ def sentence_tokenizer(data):
         tokens = word_tokenize(data[1])
         return tokens
 
+# Creates a word frequency map
 def bag_of_words(words):
     if len(words) == 0:
         raise Exception("The string is empty")
