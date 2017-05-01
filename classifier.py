@@ -1,5 +1,4 @@
 from nltk import word_tokenize
-from nltk.corpus import stopwords
 
 # Breaks the strings into a list of individual tokens
 def sentence_tokenizer(data):
