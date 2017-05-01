@@ -15,7 +15,7 @@ def bag_of_words(words):
         raise Exception("The string is empty")
     else:
         map = {}
-        for word in filtered_words:
+        for str in words:
             if (str not in map):
                 map[str] = 1
             else:
