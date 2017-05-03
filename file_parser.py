@@ -14,5 +14,13 @@ def load_file(file_name):
 
 # Get file metadata
 def get_results(string_of_file):
-	results = {}
+	word_count = get_word_count(string_of_file)
+	char_count = get_char_count(string_of_file)
+	results = {'word count': word_count, 'character count': char_count}
 	return results
+
+def get_word_count (string_of_file):
+	return len(string_of_file.split())
+
+def get_char_count (string_of_file):
+	return len(string_of_file)
