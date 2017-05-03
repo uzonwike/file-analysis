@@ -36,6 +36,7 @@ def print_file_data(name, directory):
 	except Exception as e:
 		print(e.__class__.__name__)
 
-db.connect()
-print_files(File.select(), ["name", "directory", "sentiment", "word_count"])
-db.close()
+if __name__ == '__main__':
+	db.connect()
+	print_files(File.select(), ["name", "directory", "sentiment", "word_count"])
+	db.close()
