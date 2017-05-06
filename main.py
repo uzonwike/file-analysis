@@ -24,7 +24,3 @@ def analyze_files(directory):
 			database.insert_file(file_results)
 
 	database.db.close()
-
-
-
-analyze_files("./test/neg-test")
