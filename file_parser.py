@@ -16,7 +16,7 @@ def load_file(file_name):
 def get_results(string_of_file):
 	word_count = get_word_count(string_of_file)
 	char_count = get_char_count(string_of_file)
-	results = {'word count': word_count, 'character count': char_count}
+	results = {'word_count': word_count, 'char_count': char_count}
 	return results
 
 def get_word_count (string_of_file):

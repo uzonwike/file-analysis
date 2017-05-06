@@ -6,13 +6,19 @@ db = SqliteDatabase('files.db')
 
 # This model stores all the fields from a file that has been analyzed 
 class File(Model):
-    name = CharField()
-    directory = CharField()
+    path = CharField()
     word_count = IntegerField()
+    char_count = IntegerField()
     sentiment = CharField()
+    name = CharField()
 
     class Meta:
         database = db
+
+
+# Insert a file
+def insert_file(file_dict):
+	File.create(**file_dict)
 
 # Print all the specified attrs of a list of files
 def print_files(files, attrs):
@@ -38,5 +44,5 @@ def print_file_data(name, directory):
 
 if __name__ == '__main__':
 	db.connect()
-	print_files(File.select(), ["name", "directory", "sentiment", "word_count"])
+	print_files(File.select(), ["name", "path", "sentiment", "word_count", "char_count"])
 	db.close()
