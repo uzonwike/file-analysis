@@ -1,16 +1,18 @@
 from os import listdir
 from os.path import isfile, join
 import file_parser
-from sentiment_classifier import *
-import database
+#from sentiment_classifier import *
+#import database
 import threading
 from multiprocessing import Queue
 from multiprocessing.dummy import Pool
+import time
 
-directory = "/home/uzonwike/Documents/CSC213/file-analysis/data/"
+directory = "/home/nwikeuzo17/csc213/file-analysis/data/"
 paths = [f for f in listdir(directory) if isfile(join(directory, f))]
-classifier = FileClassifier()
+#classifier = FileClassifier()
 print "YAAAH"
+'''
 def analyze_files(directory):
 	# Get all file paths, load the classifier
 	#paths = [f for f in listdir(directory) if isfile(join(directory, f))]
@@ -31,23 +33,23 @@ def analyze_files(directory):
 			database.insert_file(file_results)
 
 	database.db.close()
-
+'''
 q = Queue()
 lock = threading.Lock()
-
+'''
 #Put all file paths in a queue
 for f in listdir(directory):
 	if isfile(join(directory, f)):
 		q.put(join(directory, f))
 		print f
-#q.join()    #block until all tasks are complete
-
+q.join()    #block until all tasks are complete
+'''
 def do_work(item):
-    with lock:
-        print(item)    #will print file path
-    fh = open (item)
-    src = fh.read()
-
+	print(item)    #will print file path
+	fh = open (item)
+	src = fh.read()
+	print src
+'''
 def worker():
     while True:
         item = q.get()
@@ -61,16 +63,27 @@ def worker():
 for i in range(4):
     t = threading.Thread(target=worker)
     t.daemon = True
-#    t.start()
-
-#for i in xrange(len(paths)):
-#    paths[i] = directory + "/" + paths[i]
-
-
-# p = Pool() # automatically scales to the number of CPUs available
-# results = p.map(analyze_files("/home/uzonwike/Documents/CSC213/file-analysis/data/"), paths)
-# p.close()
-# p.join()
+    t.start()
+'''
+for i in xrange(len(paths)):
+    paths[i] = directory + "/" + paths[i]
 
 
-analyze_files("/home/uzonwike/Documents/CSC213/file-analysis/data/")
+p = Pool(3) # automatically scales to the number of CPUs available
+t0 = time.time()
+results = p.map(do_work, paths)
+p.close()
+p.join()
+t1 = time.time()
+time_elapsed = t1 - t0
+print time_elapsed
+
+'''
+t3 = time.time()
+for path in paths:
+        do_work(path)
+t4 = time.time()
+total_time = t4 - t3
+print total_time
+'''
+#analyze_files("/home/uzonwike/Documents/CSC213/file-analysis/data/")
