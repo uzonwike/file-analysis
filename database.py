@@ -6,7 +6,7 @@ db = SqliteDatabase('files.db')
 
 # This model stores all the fields from a file that has been analyzed 
 class File(Model):
-    path = CharField()
+    path = CharField(unique=True)
     word_count = IntegerField()
     char_count = IntegerField()
     sentiment = CharField()
@@ -15,34 +15,56 @@ class File(Model):
     class Meta:
         database = db
 
-
 # Insert a file
 def insert_file(file_dict):
 	File.create(**file_dict)
 
 # Print all the specified attrs of a list of files
-def print_files(files, attrs):
+def print_files(files, attrs, table = True):
+	if files.count() == 0:
+		print("No files found.")
+	if files and table:
+		header = vars(files[0])["_data"]
+		print(("{:<25}"*len(header)).format(*header))
 	for file in files:
 		data = vars(file)["_data"]
-		for attr in attrs:
-			s = attr + " is " + str(data[attr])
-			if attr == "name":
-				print(data[attr] + " ")
-			elif attr != attrs[-1]:
-				print(s, end=", ")
-			else:
-				print(s + ".")
-		print()
+		if table:
+			values = []
+			for v in data.values():
+				if type(v) == unicode and len(v) > 20:
+					values.append("..." + v[-17:])
+				else:
+					values.append(v)
+			print(("{:<25}"*len(data)).format(*values))
+		else:
+			for attr in attrs:
+				s = attr + " is " + str(data[attr])
+				if attr == "name":
+					print(data[attr] + " ")
+				elif attr != attrs[-1]:
+					print(s, end=", ")
+				else:
+					print(s + ".")
+			print()
+
+# Print the files whose path contains the specified path
+def print_files_path_contains(path, table = True):
+	files = File.select().where(File.path.contains(path))
+	print_files(files, ["name", "path", "sentiment", "word_count", "char_count"], table = table)
 
 # Print the data for a specific file
-def print_file_data(name, directory):
-	try:
-		file = File.select().where(File.name == name).where(File.directory == directory).get()
-		print_files([file], [attr for attr in vars(file)["_data"]])
-	except Exception as e:
-		print(e.__class__.__name__)
+def print_file_data(path, table = False):
+	files = File.select().where(File.path == path)
+	if files.count() > 0:
+		print_files(files, [attr for attr in vars(files.get())["_data"]], table = table)
+	else:
+		print("The specified file does not exist.")
 
-if __name__ == '__main__':
-	db.connect()
-	print_files(File.select(), ["name", "path", "sentiment", "word_count", "char_count"])
-	db.close()
+# Print all files in the database
+def print_all_files(table = True):
+	print_files_path_contains("", table = table)
+
+# Print the files whose path contains the specified path
+def print_files_with_sentiment(sentiment, table = True):
+	files = File.select().where(File.sentiment == sentiment)
+	print_files(files, ["name", "path", "sentiment", "word_count", "char_count"], table = table)
