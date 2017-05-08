@@ -3,8 +3,9 @@ from os.path import isfile, join, abspath, basename
 import file_parser
 from sentiment_classifier import *
 import database
+import peewee
 
-def analyze_files(directory):
+def analyze_files(directory, save_to_db = True):
 	# Get all file paths, load the classifier
 	paths = []
 	try:
@@ -26,6 +27,12 @@ def analyze_files(directory):
 				file_results['path'] = abspath(file_data[0])
 				file_results['sentiment'] = classifier.classify_text(file_data[1])
 				# Save to database
-				database.insert_file(file_results)
+				try:
+					if save_to_db:
+						database.insert_file(file_results)
+				except peewee.IntegrityError:
+					print("File already exists in the database.")
 
 		database.db.close()
+
+analyze_files("C:\\Users\\Marcel\\file-analysis\\")
