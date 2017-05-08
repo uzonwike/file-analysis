@@ -4,34 +4,50 @@ import file_parser
 from sentiment_classifier import *
 import database
 import peewee
+from multiprocessing import Pool
 
+NUM_THREADS = 6
+
+# Save results in the database
+def process_results(file_result):
+	if file_result:
+		# Save to database
+		try:
+			database.insert_file(file_result)
+		except peewee.IntegrityError:
+			pass
+			# print("File already exists in the database.")
+
+# Analyze files
 def analyze_files(directory, save_to_db = True):
 	# Get all file paths, load the classifier
-	paths = []
 	try:
 		paths = [f for f in listdir(directory) if isfile(join(directory, f))]
 	except WindowsError:
 		print("No such directory exists.")
 	else:
+		# Create the classifier
 		classifier = FileClassifier()
 
-		# Do analysis for all files in dir
+		# Open all files in dir with threads
 		database.db.connect()
-		for path in paths:
-			# File data is a tuple (name, contents)
-			file_data = file_parser.load_file(directory + "/" + path)
-			if file_data:
-				# Gather results
-				file_results = file_parser.get_results(file_data[1])
-				file_results['name'] = basename(file_data[0])
-				file_results['path'] = abspath(file_data[0])
-				file_results['sentiment'] = classifier.classify_text(file_data[1])
-				# Save to database
-				try:
-					if save_to_db:
-						database.insert_file(file_results)
-				except peewee.IntegrityError:
-					print("File already exists in the database.")
+		p = Pool(NUM_THREADS)
+		paths = [(directory + "/" + path) for path in paths]
+		results = p.map(file_parser.load_file, paths)
+
+		# Get file results
+		file_results = []
+		for file_data in results:
+			# Gather results
+			file_result = file_parser.get_results(file_data[1])
+			file_result['name'] = basename(file_data[0])
+			file_result['path'] = abspath(file_data[0])
+			file_result['sentiment'] = classifier.classify_text(file_data[1])
+			file_results.append(file_result)
+
+		# Save file results to DB
+		p = Pool(NUM_THREADS)
+		p.map(process_results, file_results)
 
 		database.db.close()
 
