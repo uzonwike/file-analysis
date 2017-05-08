@@ -12,7 +12,7 @@ def analyze_files(directory, save_to_db = True):
 		paths = [f for f in listdir(directory) if isfile(join(directory, f))]
 	except WindowsError:
 		print("No such directory exists.")
-	finally:
+	else:
 		classifier = FileClassifier()
 
 		# Do analysis for all files in dir
@@ -35,4 +35,6 @@ def analyze_files(directory, save_to_db = True):
 
 		database.db.close()
 
-analyze_files("C:\\Users\\Marcel\\file-analysis\\")
+if __name__ == '__main__':
+	d = raw_input("Enter a directory of files to perform analysis on: ")
+	analyze_files(d)
