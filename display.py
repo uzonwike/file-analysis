@@ -15,6 +15,7 @@ def main():
 	while True:
 		commands = raw_input("> ").split()
 		if len(commands) > 0:
+			# Default commands
 			if commands[0] in ["q", "quit", "exit"]:
 				break
 			elif commands[0] in ["commands", "help"]:
@@ -22,11 +23,15 @@ def main():
 			elif commands[0] == "table":
 				print_as_table = not print_as_table
 				print("Display as table: " + str(print_as_table))
+			# Otherwise, try to use command to run database function
 			else:
+				# Find function from database.py based on command
 				func = get_function(commands[0])
 				if func:
+					# All commands after the first are passed as args
 					args = commands[1:]
 					try:
+						# "*args" unpacks args from a list
 						func(*args, table = print_as_table)
 					except:
 						print("Invalid command, try again.")

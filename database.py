@@ -23,11 +23,14 @@ def insert_file(file_dict):
 def print_files(files, attrs, table = True):
 	if files.count() == 0:
 		print("No files found.")
+	# Print the header, using string formatting
 	if files and table:
 		header = vars(files[0])["_data"]
 		print(("{:<25}"*len(header)).format(*header))
 	for file in files:
 		data = vars(file)["_data"]
+		# If we are printing as a table
+		# Print each file as a row
 		if table:
 			values = []
 			for v in data.values():
@@ -36,6 +39,7 @@ def print_files(files, attrs, table = True):
 				else:
 					values.append(v)
 			print(("{:<25}"*len(data)).format(*values))
+		# Otherwise, print as formatted sentence
 		else:
 			for attr in attrs:
 				s = attr + " is " + str(data[attr])
