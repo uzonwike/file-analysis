@@ -12,10 +12,14 @@ from sklearn.naive_bayes import MultinomialNB
 import nltk.classify.util
 from nltk.classify import NaiveBayesClassifier
  
+# Parts of classifier were created with the help of:
+# https://marcobonzanini.com/2015/01/19/sentiment-analysis-with-python-and-scikit-learn/
+
 class FileClassifier:
     def __init__(self, train_dir):
         self.train_data = []
         self.train_labels = []
+        # Sentiment labels
         self.labels = ['pos', 'neg']
         # Create TfidVectorizer
         self.vectorizer = TfidfVectorizer(min_df=5,
@@ -30,6 +34,7 @@ class FileClassifier:
     def annotate_files(self, dir_name):
         # Iterate over labels/words and annotate them
         for label in self.labels:
+            # Look in the folders for the corresponding labels
             full_path = os.path.join(dir_name, label)
 
             # Read the file
