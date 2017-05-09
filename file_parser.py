@@ -19,8 +19,10 @@ def get_results(string_of_file):
 	results = {'word_count': word_count, 'char_count': char_count}
 	return results
 
+# Get file word count
 def get_word_count (string_of_file):
 	return len(string_of_file.split())
 
+# Get file char count
 def get_char_count (string_of_file):
 	return len(string_of_file)
