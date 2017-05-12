@@ -1,7 +1,7 @@
 import database
 help_text = '''The following commands are available: 
 1. list (list all files)
-2. sentiment <sentiment> (list all files of with a sentiment of <sentiment>)
+2. sentiment <sentiment> (list all files with a sentiment of <sentiment>)
 3. path <path> (list all files where the file's path contains <path>)
 4. data <path> (list the data of file with path of <path>)
 5. table (toggle table format on/off)

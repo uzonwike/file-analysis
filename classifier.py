@@ -34,6 +34,7 @@ class FileClassifier:
     def annotate_files(self, dir_name):
         # Iterate over labels/words and annotate them
         for label in self.labels:
+            count = 0
             # Look in the folders for the corresponding labels
             full_path = os.path.join(dir_name, label)
 
@@ -43,6 +44,8 @@ class FileClassifier:
                     content = f.read()
                     self.train_data.append(content)
                     self.train_labels.append(label)
+                    count += 1
+            print("Annotated " + str(count) + " files as '" + label + "'.")
 
     # Transform the corpus into vectors matching the occurence of words relative to all the documents
     def vectorize(self, document):
