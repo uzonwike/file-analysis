@@ -1,17 +1,10 @@
-import nltk
 import string
 import os, sys
-
-from nltk import word_tokenize
-from nltk.corpus import stopwords
-from nltk.stem.porter import *
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 
-import nltk.classify.util
-from nltk.classify import NaiveBayesClassifier
- 
+# A class to handles classification and prediction 
 # Parts of classifier were created with the help of:
 # https://marcobonzanini.com/2015/01/19/sentiment-analysis-with-python-and-scikit-learn/
 
